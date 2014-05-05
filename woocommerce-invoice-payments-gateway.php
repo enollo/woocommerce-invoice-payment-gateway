@@ -25,25 +25,14 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
  * @param mixed $hook
  * @return void
  */
- 
+
 function wipg_init_invoice_gateway_class() {
 	include_once( plugin_dir_path( __FILE__ ) . '/inc/class-wc-gateway-invoice.php' );
 }
 add_action( 'plugins_loaded', 'wipg_init_invoice_gateway_class' );
- 
+
 function wipg_add_invoice_gateway_class( $methods ) {
-	$methods[] = 'WC_Gateway_Invoice'; 
+	$methods[] = 'WC_Gateway_Invoice';
 	return $methods;
 }
 add_filter( 'woocommerce_payment_gateways', 'wipg_add_invoice_gateway_class' );
- 
-function wipg_filter_available_payment_gateways( $gateways ) {
-	if ( current_user_can('purchase_wholesale') && ! ( isset( $_GET['pay_for_order'] ) && $_GET['pay_for_order'] ) ) {
-		unset( $gateways['paypal'] );
-	} else {
-		unset( $gateways['invoice'] );
-	}
-	return $gateways;
-}
-add_filter( 'woocommerce_available_payment_gateways', 'wipg_filter_available_payment_gateways' );
- 
